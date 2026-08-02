@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-deep: #0f0718;
+    --bg-mid: #1b0d2b;
+    color-scheme: dark;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Prevent horizontal jitter from decorative absolutely-positioned layers */
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-plum-950 font-body text-blush-50 antialiased;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 80% 55% at 50% -10%, rgba(139, 106, 224, 0.28), transparent 60%),
+      radial-gradient(ellipse 60% 45% at 90% 20%, rgba(249, 106, 155, 0.14), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 5% 70%, rgba(201, 151, 58, 0.1), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  /* Respect users who prefer less motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  ::selection {
+    background: rgba(239, 208, 122, 0.35);
+    color: #fff5f8;
+  }
+
+  /* Elegant scrollbar (desktop) */
+  ::-webkit-scrollbar {
+    width: 9px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f0718;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #c9b4ff, #f96a9b);
+    border-radius: 999px;
+  }
+
+  :focus-visible {
+    outline: 2px solid #efd07a;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/12 bg-white/[0.055] backdrop-blur-xl;
+    box-shadow:
+      0 8px 32px rgba(15, 7, 24, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+
+  .glass-strong {
+    @apply border border-white/18 bg-white/[0.09] backdrop-blur-2xl;
+    box-shadow:
+      0 12px 44px rgba(15, 7, 24, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-200 via-gold-300 to-blush-300 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-romance {
+    @apply bg-gradient-to-r from-blush-200 via-lavender-200 to-gold-200 bg-clip-text text-transparent;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold-300/45 to-transparent;
+  }
+}
+
+@layer base {
+  /* Cormorant Garamond defaults to old-style figures, which make digits sit
+     below the cap height ("1" and "2" look lowercase). Force lining figures
+     so the countdown, clock and chapter titles read cleanly. */
+  .font-display,
+  h1,
+  h2,
+  h3 {
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: 'lnum' 1, 'tnum' 1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Safe-area padding for notched phones */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 900px;
+  }
+}
