@@ -7,7 +7,6 @@ import { GlowButton } from '@/components/ui/GlowButton';
 import { StarField } from '@/components/effects/StarField';
 import { FloatingHearts } from '@/components/effects/FloatingHearts';
 import { Particles } from '@/components/effects/Particles';
-import { Countdown } from './Countdown';
 import { EASE } from '@/lib/motion';
 import { scrollToId } from '@/lib/utils';
 
@@ -145,15 +144,6 @@ export function Hero({ ready }: { ready: boolean }) {
               →
             </motion.span>
           </GlowButton>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: EASE, delay: 1.9 }}
-          className="mt-10 sm:mt-14"
-        >
-          <Countdown />
         </motion.div>
       </motion.div>
 

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Photo } from '@/content/site';
 import { cn, isVideoSource } from '@/lib/utils';
 import { EASE } from '@/lib/motion';
@@ -20,9 +20,8 @@ type Props = {
 };
 
 /**
- * A photo or video in an elegant glass frame. When `photo.src` is null it renders a
- * beautiful placeholder instead of breaking — so the site looks complete
- * before any media files are added. Supports both images and videos (.mp4, .webm, etc).
+ * A photo or video in an elegant glass frame. Supports both images and videos (.mp4, .webm).
+ * Automatically handles mobile Safari inline autoplay policies and pauses off-screen videos.
  */
 export function PhotoFrame({
   photo,
@@ -65,16 +64,7 @@ export function PhotoFrame({
         <div className={cn('relative overflow-hidden rounded-xl bg-plum-800/60', aspect)}>
           {hasMedia ? (
             isVideo ? (
-              // eslint-disable-next-line jsx-a11y/media-has-caption
-              <video
-                src={photo.src as string}
-                autoPlay
-                loop
-                muted
-                playsInline
-                onError={() => setErrored(true)}
-                className="h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.06]"
-              />
+              <InlineVideo src={photo.src as string} onError={() => setErrored(true)} />
             ) : (
               <Image
                 src={photo.src as string}
@@ -91,8 +81,8 @@ export function PhotoFrame({
           )}
 
           {isVideo && hasMedia && (
-            <span className="absolute right-2.5 top-2.5 z-10 grid h-7 w-7 place-items-center rounded-full bg-plum-950/60 text-white backdrop-blur-md">
-              <svg viewBox="0 0 24 24" className="ml-0.5 h-3.5 w-3.5 fill-current">
+            <span className="absolute right-2.5 top-2.5 z-10 grid h-8 w-8 place-items-center rounded-full bg-plum-950/70 text-white shadow-md backdrop-blur-md transition-transform group-hover:scale-110">
+              <svg viewBox="0 0 24 24" className="ml-0.5 h-4 w-4 fill-current">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </span>
@@ -110,6 +100,57 @@ export function PhotoFrame({
         </div>
       </div>
     </motion.figure>
+  );
+}
+
+/**
+ * Mobile-compatible inline video player.
+ * Configures DOM attributes for iOS Safari (playsinline, webkit-playsinline, defaultMuted)
+ * and uses IntersectionObserver to pause video playback when scrolled off-screen.
+ */
+function InlineVideo({ src, onError }: { src: string; onError: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute('playsinline', 'true');
+    video.setAttribute('webkit-playsinline', 'true');
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    io.observe(video);
+    return () => {
+      io.disconnect();
+      video.pause();
+    };
+  }, [src]);
+
+  return (
+    // eslint-disable-next-line jsx-a11y/media-has-caption
+    <video
+      ref={videoRef}
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="metadata"
+      onError={onError}
+      className="h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.06]"
+    />
   );
 }
 

@@ -82,6 +82,18 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.14);
   }
 
+  /* Optimize heavy blur rendering on mobile screens for 60fps scrolling */
+  @media (max-width: 640px) {
+    .glass {
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+    }
+    .glass-strong {
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+  }
+
   .text-gradient-gold {
     @apply bg-gradient-to-r from-gold-200 via-gold-300 to-blush-300 bg-clip-text text-transparent;
   }

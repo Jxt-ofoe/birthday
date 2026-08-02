@@ -19,10 +19,16 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
   useScrollLock(open);
   useEscapeKey(onClose, open);
 
-  // Pause + reset when closed; focus the close button when opened.
+  // Pause + reset when closed; focus close button and trigger play when opened.
   useEffect(() => {
     if (open) {
       setFailed(false);
+      const v = videoRef.current;
+      if (v) {
+        v.setAttribute('playsinline', 'true');
+        v.setAttribute('webkit-playsinline', 'true');
+        void v.play().catch(() => {});
+      }
       const t = window.setTimeout(() => closeRef.current?.focus(), 320);
       return () => window.clearTimeout(t);
     }
