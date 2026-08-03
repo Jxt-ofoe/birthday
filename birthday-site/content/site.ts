@@ -31,11 +31,14 @@ export type ChatBubble = {
 
 export type MusicTrack = {
   title: string;
+  artist?: string;
   note: string;
-  /** "spotify" | "youtube" */
-  provider: 'spotify' | 'youtube';
-  /** Spotify: the track ID.  YouTube: the video ID.  null = placeholder card */
+  /** "spotify" | "youtube" | "local" */
+  provider: 'spotify' | 'youtube' | 'local';
+  /** Spotify track ID, YouTube video ID, or local file path */
   id: string | null;
+  /** Local audio file path */
+  src?: string | null;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -60,11 +63,9 @@ export const person = {
 /* -------------------------------------------------------------------------- */
 
 export const audio = {
-  /** Drop a soft romantic track at public/music/romantic.mp3.
-   *  If the file is missing, the site automatically plays a gentle,
-   *  generated ambient piano pad instead — so it's never silent. */
-  src: '/music/romantic.mp3',
-  volume: 0.32,
+  /** Romantic background track */
+  src: '/music/Love Theme from Romeo and Juliet - Joslin - Henri Mancini, Nino Rota.mp3',
+  volume: 0.35,
 };
 
 /* -------------------------------------------------------------------------- */
@@ -303,9 +304,54 @@ export const musicChapter = {
    *                                          ^^^^^^^^^^^ ← that's the id
    */
   tracks: [
-    { title: 'Our song', note: 'The one that always brings you to mind.', provider: 'spotify', id: null },
-    { title: 'For the 2 AM nights', note: 'Soft, slow, and a little bit ours.', provider: 'youtube', id: null },
-    { title: 'The happy one', note: 'This is what my heart sounds like around you.', provider: 'spotify', id: null },
+    {
+      title: 'Love Theme from Romeo & Juliet',
+      artist: 'Joslin / Nino Rota & Henri Mancini',
+      note: 'Our main background melody.',
+      provider: 'local',
+      id: null,
+      src: '/music/Love Theme from Romeo and Juliet - Joslin - Henri Mancini, Nino Rota.mp3',
+    },
+    {
+      title: 'Beauty and the Beast',
+      artist: 'Ariana Grande & John Legend',
+      note: 'Tale as old as time.',
+      provider: 'local',
+      id: null,
+      src: '/music/Ariana Grande, John Legend - Beauty and the Beast (From Beauty and the Beast - Official Video).mp3',
+    },
+    {
+      title: 'Until I Found You',
+      artist: 'Stephen Sanchez',
+      note: 'I would never fall in love until I found you.',
+      provider: 'local',
+      id: null,
+      src: '/music/Stephen Sanchez - Until I Found You (Official Video).mp3',
+    },
+    {
+      title: "Say You Won't Let Go",
+      artist: 'James Arthur',
+      note: 'The song that always brings you to mind.',
+      provider: 'local',
+      id: null,
+      src: "/music/James Arthur - Say You Won't Let Go.mp3",
+    },
+    {
+      title: 'Rest of My Life',
+      artist: 'Keenan Te',
+      note: 'Soft, slow, and for all our tomorrows.',
+      provider: 'local',
+      id: null,
+      src: '/music/Keenan Te - Rest of My Life (Official Lyric Video).mp3',
+    },
+    {
+      title: 'Dandelions',
+      artist: 'Ruth B.',
+      note: 'Wishing on dandelions for you.',
+      provider: 'local',
+      id: null,
+      src: '/music/Ruth B. - Dandelions (Lyrics).mp3',
+    },
   ] as MusicTrack[],
 };
 

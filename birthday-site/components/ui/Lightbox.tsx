@@ -34,14 +34,22 @@ export function Lightbox({ photos, index, onClose, onNavigate }: Props) {
 
   useEffect(() => {
     if (!open) return;
+    if (isVideo) {
+      window.dispatchEvent(new CustomEvent('pause-bg-music'));
+    }
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
       if (e.key === 'ArrowRight') go(1);
       if (e.key === 'ArrowLeft') go(-1);
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose, go]);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      if (isVideo) {
+        window.dispatchEvent(new CustomEvent('resume-bg-music'));
+      }
+    };
+  }, [open, isVideo, onClose, go]);
 
   return (
     <AnimatePresence>

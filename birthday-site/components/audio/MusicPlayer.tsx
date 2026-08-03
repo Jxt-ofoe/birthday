@@ -149,13 +149,72 @@ export function MusicPlayer() {
     }
   }, [muted, source, startPlayback]);
 
+  const pausedByMediaRef = useRef(false);
+
+  /* Auto-pause background music whenever any video or soundtrack song plays, and resume when stopped */
+  useEffect(() => {
+    const handlePauseBg = () => {
+      if (startedRef.current && !muted) {
+        pausedByMediaRef.current = true;
+        if (source === 'file') audioRef.current?.pause();
+        else void padRef.current?.mute();
+        setMuted(true);
+      }
+    };
+
+    const handleResumeBg = () => {
+      if (pausedByMediaRef.current) {
+        // Check if any other media element is still actively playing
+        const mediaElems = Array.from(document.querySelectorAll<HTMLMediaElement>('video, audio'));
+        const activeMedia = mediaElems.some(
+          (m) => m.id !== 'global-bg-audio' && !m.paused && !m.ended && m.readyState > 2,
+        );
+
+        if (!activeMedia) {
+          pausedByMediaRef.current = false;
+          setMuted(false);
+          if (source === 'file') void audioRef.current?.play().catch(() => undefined);
+          else void padRef.current?.unmute();
+        }
+      }
+    };
+
+    const onMediaPlay = (e: Event) => {
+      const target = e.target as HTMLMediaElement;
+      if (target && target.id !== 'global-bg-audio') {
+        handlePauseBg();
+      }
+    };
+
+    const onMediaPauseOrEnd = (e: Event) => {
+      const target = e.target as HTMLMediaElement;
+      if (target && target.id !== 'global-bg-audio') {
+        handleResumeBg();
+      }
+    };
+
+    window.addEventListener('play', onMediaPlay, true);
+    window.addEventListener('pause', onMediaPauseOrEnd, true);
+    window.addEventListener('ended', onMediaPauseOrEnd, true);
+    window.addEventListener('pause-bg-music', handlePauseBg);
+    window.addEventListener('resume-bg-music', handleResumeBg);
+
+    return () => {
+      window.removeEventListener('play', onMediaPlay, true);
+      window.removeEventListener('pause', onMediaPauseOrEnd, true);
+      window.removeEventListener('ended', onMediaPauseOrEnd, true);
+      window.removeEventListener('pause-bg-music', handlePauseBg);
+      window.removeEventListener('resume-bg-music', handleResumeBg);
+    };
+  }, [muted, source]);
+
   /* Pause when the tab is hidden, resume when it returns. */
   useEffect(() => {
     const onVis = () => {
       if (document.hidden && !muted) {
         if (source === 'file') audioRef.current?.pause();
         else void padRef.current?.mute();
-      } else if (!document.hidden && !muted && startedRef.current) {
+      } else if (!document.hidden && !muted && startedRef.current && !pausedByMediaRef.current) {
         if (source === 'file') void audioRef.current?.play().catch(() => undefined);
         else void padRef.current?.unmute();
       }
@@ -172,7 +231,7 @@ export function MusicPlayer() {
     <>
       {source === 'file' && (
         // eslint-disable-next-line jsx-a11y/media-has-caption
-        <audio ref={audioRef} src={audioConfig.src} loop preload="none" />
+        <audio id="global-bg-audio" ref={audioRef} src={audioConfig.src} loop preload="none" />
       )}
 
       <div className="fixed bottom-5 right-4 z-50 flex items-center gap-2 pb-safe sm:bottom-7 sm:right-7">

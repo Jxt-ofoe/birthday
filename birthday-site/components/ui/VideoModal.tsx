@@ -23,6 +23,7 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
   useEffect(() => {
     if (open) {
       setFailed(false);
+      window.dispatchEvent(new CustomEvent('pause-bg-music'));
       const v = videoRef.current;
       if (v) {
         v.setAttribute('playsinline', 'true');
@@ -37,6 +38,7 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
       v.pause();
       v.currentTime = 0;
     }
+    window.dispatchEvent(new CustomEvent('resume-bg-music'));
   }, [open]);
 
   const hasVideo = Boolean(surprise.videoSrc) && !failed;

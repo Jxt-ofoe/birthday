@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { musicChapter as M, type MusicTrack } from '@/content/site';
 import { Section } from '@/components/ui/Section';
@@ -9,12 +9,9 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { EASE } from '@/lib/motion';
 
 /**
- * Chapter 8 — embedded Spotify / YouTube players.
- * Embeds are lazy: we show a lightweight glass card with a play button and
- * only mount the heavy iframe after she taps it. Keeps the page fast.
+ * Chapter 8 — Soundtrack featuring local MP3 audio files or embedded players.
  */
 export function MusicChapter() {
-
   return (
     <Section id="chapter-8" glow="lavender" label="Chapter Eight: Songs That Remind Me Of You">
       <ChapterHeading number={M.number} title={M.title} subtitle={M.subtitle} />
@@ -24,14 +21,16 @@ export function MusicChapter() {
           <TrackCard key={i} track={track} index={i} />
         ))}
       </div>
-
-      {/* Note: no setup instructions are ever shown on screen. Edit content/site.ts. */}
     </Section>
   );
 }
 
 function TrackCard({ track, index }: { track: MusicTrack; index: number }) {
   const [loaded, setLoaded] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const isLocal = track.provider === 'local' || Boolean(track.src);
   const isSpotify = track.provider === 'spotify';
 
   const embedUrl = track.id
@@ -39,6 +38,21 @@ function TrackCard({ track, index }: { track: MusicTrack; index: number }) {
       ? `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`
       : `https://www.youtube-nocookie.com/embed/${track.id}?rel=0&modestbranding=1&autoplay=1`
     : null;
+
+  const toggleLocalPlay = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (playing) {
+      el.pause();
+      setPlaying(false);
+    } else {
+      document.querySelectorAll('audio.local-track-audio').forEach((a) => {
+        if (a !== el) (a as HTMLAudioElement).pause();
+      });
+      void el.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
 
   return (
     <motion.div
@@ -48,26 +62,63 @@ function TrackCard({ track, index }: { track: MusicTrack; index: number }) {
       transition={{ duration: 0.85, ease: EASE, delay: index * 0.1 }}
     >
       <GlassCard interactive={!loaded} className="overflow-hidden p-5 sm:p-6">
+        {isLocal && (
+          // eslint-disable-next-line jsx-a11y/media-has-caption
+          <audio
+            ref={audioRef}
+            src={track.src as string}
+            className="local-track-audio hidden"
+            onEnded={() => setPlaying(false)}
+            onPause={() => setPlaying(false)}
+            onPlay={() => setPlaying(true)}
+          />
+        )}
+
         <div className="flex items-center gap-4">
           <motion.span
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/12 bg-gradient-to-br from-lavender-500/25 to-blush-500/20"
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/12 bg-gradient-to-br from-lavender-500/25 to-blush-500/20 text-xl"
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.4 }}
             aria-hidden="true"
           >
-            {isSpotify ? <SpotifyIcon /> : <YouTubeIcon />}
+            {isLocal ? (
+              '🎵'
+            ) : isSpotify ? (
+              <SpotifyIcon />
+            ) : (
+              <YouTubeIcon />
+            )}
           </motion.span>
 
           <div className="min-w-0 flex-1">
-            <h3 className="truncate font-display text-lg font-normal text-blush-50">
-              {track.title}
+            <h3 className="truncate font-display text-lg font-normal text-blush-50 sm:text-xl">
+              {track.title} {track.artist && <span className="font-body text-xs font-light text-blush-200/70">— {track.artist}</span>}
             </h3>
             <p className="mt-0.5 truncate font-body text-[13px] font-light text-blush-100/65">
               {track.note}
             </p>
           </div>
 
-          {embedUrl && !loaded && (
+          {isLocal ? (
+            <motion.button
+              type="button"
+              onClick={toggleLocalPlay}
+              aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-blush-200 to-lavender-200 text-plum-900 shadow-md"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.92 }}
+            >
+              {playing ? (
+                <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5 fill-current">
+                  <path d="M8 5.14v14l11-7-11-7Z" />
+                </svg>
+              )}
+            </motion.button>
+          ) : embedUrl && !loaded ? (
             <motion.button
               type="button"
               onClick={() => setLoaded(true)}
@@ -80,28 +131,26 @@ function TrackCard({ track, index }: { track: MusicTrack; index: number }) {
                 <path d="M8 5.14v14l11-7-11-7Z" />
               </svg>
             </motion.button>
-          )}
-
-          {!embedUrl && (
+          ) : (
             <span aria-hidden="true" className="shrink-0 text-lg text-blush-200/45">
               ♪
             </span>
           )}
         </div>
 
-        {/* animated waveform while idle */}
-        {!loaded && embedUrl && (
-          <div className="mt-4 flex h-6 items-end gap-[3px] opacity-50" aria-hidden="true">
+        {/* animated waveform */}
+        {(playing || (!loaded && embedUrl)) && (
+          <div className="mt-4 flex h-6 items-end gap-[3px] opacity-75" aria-hidden="true">
             {Array.from({ length: 44 }).map((_, i) => (
               <motion.span
                 key={i}
-                className="flex-1 rounded-full bg-gradient-to-t from-lavender-400/60 to-blush-300/60"
-                animate={{ height: [4, 6 + ((i * 7) % 18), 4] }}
+                className="flex-1 rounded-full bg-gradient-to-t from-lavender-400/70 to-blush-300/80"
+                animate={playing ? { height: [4, 6 + ((i * 7) % 18), 4] } : { height: 4 }}
                 transition={{
-                  duration: 1.6 + (i % 5) * 0.2,
+                  duration: 1.2 + (i % 5) * 0.18,
                   repeat: Infinity,
                   ease: 'easeInOut',
-                  delay: (i % 11) * 0.09,
+                  delay: (i % 11) * 0.08,
                 }}
                 style={{ height: 5 }}
               />
