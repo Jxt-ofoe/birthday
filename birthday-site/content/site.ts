@@ -305,14 +305,6 @@ export const musicChapter = {
    */
   tracks: [
     {
-      title: 'Love Theme from Romeo & Juliet',
-      artist: 'Joslin / Nino Rota & Henri Mancini',
-      note: 'Our main background melody.',
-      provider: 'local',
-      id: null,
-      src: '/music/Love Theme from Romeo and Juliet - Joslin - Henri Mancini, Nino Rota.mp3',
-    },
-    {
       title: 'Beauty and the Beast',
       artist: 'Ariana Grande & John Legend',
       note: 'Tale as old as time.',

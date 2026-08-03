@@ -208,19 +208,44 @@ export function MusicPlayer() {
     };
   }, [muted, source]);
 
-  /* Pause when the tab is hidden, resume when it returns. */
+  /* Pause background music and any active media when leaving the browser tab/app, resume when returning */
   useEffect(() => {
-    const onVis = () => {
-      if (document.hidden && !muted) {
-        if (source === 'file') audioRef.current?.pause();
-        else void padRef.current?.mute();
-      } else if (!document.hidden && !muted && startedRef.current && !pausedByMediaRef.current) {
+    const handleLeave = () => {
+      // Pause background audio
+      if (source === 'file') audioRef.current?.pause();
+      else void padRef.current?.mute();
+
+      // Pause any active HTML5 audio or video elements on the page
+      document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((el) => {
+        if (el.id !== 'global-bg-audio' && !el.paused) {
+          el.pause();
+        }
+      });
+    };
+
+    const handleReturn = () => {
+      if (!document.hidden && !muted && startedRef.current && !pausedByMediaRef.current) {
         if (source === 'file') void audioRef.current?.play().catch(() => undefined);
         else void padRef.current?.unmute();
       }
     };
-    document.addEventListener('visibilitychange', onVis);
-    return () => document.removeEventListener('visibilitychange', onVis);
+
+    const onVisChange = () => {
+      if (document.hidden) handleLeave();
+      else handleReturn();
+    };
+
+    document.addEventListener('visibilitychange', onVisChange);
+    window.addEventListener('pagehide', handleLeave);
+    window.addEventListener('blur', handleLeave);
+    window.addEventListener('focus', handleReturn);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisChange);
+      window.removeEventListener('pagehide', handleLeave);
+      window.removeEventListener('blur', handleLeave);
+      window.removeEventListener('focus', handleReturn);
+    };
   }, [muted, source]);
 
   useEffect(() => () => padRef.current?.destroy(), []);
