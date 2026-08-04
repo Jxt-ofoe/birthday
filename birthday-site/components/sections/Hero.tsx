@@ -48,13 +48,20 @@ export function Hero({ ready }: { ready: boolean }) {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_100%_70%_at_50%_0%,rgba(75,42,107,0.55),transparent_60%)]" />
         <StarField count={110} />
         <Particles count={40} />
-        {/* moon glow */}
+        {/* top-right moon photo circle */}
         <motion.div
-          className="absolute right-[4%] top-[8%] h-20 w-20 rounded-full bg-gradient-to-br from-blush-100/90 to-lavender-200/50 blur-[2px] sm:right-[8%] sm:top-[12%] sm:h-32 sm:w-32"
-          animate={{ opacity: [0.55, 0.8, 0.55], scale: [1, 1.03, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ boxShadow: '0 0 90px 30px rgba(255,214,232,0.22)' }}
-        />
+          className="absolute right-[4%] top-[8%] h-20 w-20 overflow-hidden rounded-full border-2 border-white/50 p-0.5 shadow-glass backdrop-blur-md sm:right-[8%] sm:top-[12%] sm:h-32 sm:w-32"
+          animate={{ opacity: [0.88, 1, 0.88], scale: [1, 1.04, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ boxShadow: '0 0 60px 18px rgba(255,182,206,0.35)' }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/photos/moon-photo.jpg"
+            alt="My Love"
+            className="h-full w-full rounded-full object-cover transition-transform duration-700 hover:scale-110"
+          />
+        </motion.div>
       </motion.div>
 
       <FloatingHearts count={10} seed={101} intensity="subtle" />
