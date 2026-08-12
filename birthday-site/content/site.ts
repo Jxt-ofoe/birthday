@@ -209,12 +209,12 @@ export const chapter4 = {
   ],
   /** Add as many as you like — the grid adapts automatically */
   gallery: [
-    { src: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4', alt: 'Special video memory' },
+    { src: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4', alt: 'Special video memory 1' },
+    { src: '/video/WhatsApp Video 2026-08-12 at 9.01.00 PM.mp4', alt: 'Special video memory 2' },
     { src: '/photos/pic2.jpeg', alt: 'Artist Night photo 1' },
     { src: '/photos/WhatsApp Image 2026-08-02 at 9.56.42 AM.jpeg', alt: 'Artist Night photo 2' },
     { src: '/photos/WhatsApp Image 2026-08-02 at 10.03.49 AM.jpeg', alt: 'Artist Night photo 3' },
     { src: null, alt: 'Artist Night photo 4' },
-    { src: null, alt: 'Artist Night photo 5' },
   ] as Photo[],
 };
 
@@ -269,25 +269,15 @@ export const loveLetter = {
   greeting: 'My dearest Chelsey,',
   /** Typed out one line at a time. Blank strings ('') create a paragraph break. */
   body: [
-    'Happy birthday ❤️',
+    'There are things I find easier to write than to say out loud, so I’m writing them here.',
     '',
-    'I made this little thing for you. Honestly, it’s not what I initially wanted to send you. What I originally planned is something you’ve kept somewhere, so I’ll send that to you later.',
+    'Thank you for your patience with me, for your softness, and for the way you make even the quietest evenings feel full.',
     '',
-    'But I also need to be honest with you about something. I don’t know what has been going on with you lately. Anytime we talk, I feel like you’re always trying to push me away, and I genuinely don’t know what I’ve done to make you feel this way.',
+    'I love how easy it is to be myself around you. I don’t have to perform or pretend — I can just be, and that is the rarest gift anyone has ever given me.',
     '',
-    'If you’re no longer interested in this relationship, please just be honest with me and tell me. I’d rather hear the truth from you than keep trying to figure out what’s wrong.',
+    'I hope this year brings you everything you’ve been quietly praying for. And I hope you always know that whatever happens, you have someone in your corner who is proud of you.',
     '',
-    'I remember when you told me that you didn’t like me asking you certain questions. I understood you, apologized, and I stopped. I haven’t pressured you to answer those questions again because I respect your boundaries.',
-    '',
-    'So when you do something that hurts me or makes me uncomfortable, and I tell you about it, I don’t understand why you get annoyed with me. I’m not trying to fight with you or control you. I’m simply telling you how I feel, just like I would expect you to tell me when I do something you don’t like.',
-    '',
-    'Lately, when I call, you don’t respond. When I text, it feels like you don’t even want to talk to me. And honestly, it hurts. I keep wondering what I did wrong and why things have suddenly become this way between us.',
-    '',
-    'If you’re tired of the relationship or you no longer want to be with me, please just tell me. I’ll accept it, even though it will hurt. I just don’t want to keep holding on to someone who is already trying to let me go.',
-    '',
-    'I had something special planned for you, and I genuinely wanted to make your birthday special. But if you’ve already made up your mind about us, just be honest with me. I’ll respect your decision and step away.',
-    '',
-    'I care about you deeply, and that’s why I’m even saying all of this. I just want honesty from you.',
+    'Thank you for choosing me. I’d choose you again, every single time.',
   ],
   signOff: 'Forever yours,',
   signature: 'Ernest ❤️',
@@ -354,6 +344,14 @@ export const musicChapter = {
       id: null,
       src: '/music/Ruth B. - Dandelions (Lyrics).mp3',
     },
+    {
+      title: 'Cheerleader',
+      artist: 'OMI',
+      note: 'Oh, I think that I found myself a cheerleader.',
+      provider: 'local',
+      id: null,
+      src: '/music/OMI - Cheerleader (Felix Jaehn Remix) (Official Video) [Ultra Records] [jGflUbPQfW8].mp3',
+    },
   ] as MusicTrack[],
 };
 
@@ -366,6 +364,17 @@ export const surprise = {
   hint: 'Tap the gift',
   title: 'Happy Birthday, My Beautiful Girl ❤️',
   paragraphs: [
+    'Thank you for coming into my life.',
+    'Thank you for every laugh, every conversation, every memory, and every moment we’ve shared.',
+    'I may not have the biggest gift today, but I hope this reminds you just how much you mean to me.',
+    'I love you more than words can fully express, and I pray this new year of your life is filled with happiness, success, good health, peace, and endless smiles.',
+    'Happy Birthday, my love.',
+  ],
+  signOff: 'Forever yours, Ernest ❤️',
+  videoButton: 'Read My Birthday Message',
+  videoTitle: 'A Personal Message From Me',
+  birthdayMessage: [
+    'Happy birthday ❤️',
     'I made this little thing for you. Honestly, it’s not what I initially wanted to send you. What I originally planned is something you’ve kept somewhere, so I’ll send that to you later.',
     'But I also need to be honest with you about something. I don’t know what has been going on with you lately. Anytime we talk, I feel like you’re always trying to push me away, and I genuinely don’t know what I’ve done to make you feel this way.',
     'If you’re no longer interested in this relationship, please just be honest with me and tell me. I’d rather hear the truth from you than keep trying to figure out what’s wrong.',
@@ -376,12 +385,8 @@ export const surprise = {
     'I had something special planned for you, and I genuinely wanted to make your birthday special. But if you’ve already made up your mind about us, just be honest with me. I’ll respect your decision and step away.',
     'I care about you deeply, and that’s why I’m even saying all of this. I just want honesty from you.',
   ],
-  signOff: 'Forever yours, Ernest ❤️',
-  videoButton: 'Play My Birthday Message',
-  videoSrc: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4',
+  videoSrc: null as string | null,
   videoPoster: null as string | null,
-  videoTitle: 'A message from me to you',
-  /* Shown only if the video file is missing. Keep it warm — she might see it. */
   videoFallback: 'This message is coming soon, my love. ❤️',
 };
 

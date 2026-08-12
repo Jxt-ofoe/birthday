@@ -1,47 +1,26 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { surprise } from '@/content/site';
 import { useEscapeKey, useScrollLock } from '@/lib/hooks';
 import { EASE } from '@/lib/motion';
 
 /**
- * Modal that plays your personal birthday video.
- * Reads `surprise.videoSrc`; if the file is missing it shows a graceful
- * message telling you exactly where to drop it.
+ * Modal that presents your personal birthday message.
  */
 export function VideoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [failed, setFailed] = useState(false);
 
   useScrollLock(open);
   useEscapeKey(onClose, open);
 
-  // Pause + reset when closed; focus close button and trigger play when opened.
   useEffect(() => {
     if (open) {
-      setFailed(false);
-      window.dispatchEvent(new CustomEvent('pause-bg-music'));
-      const v = videoRef.current;
-      if (v) {
-        v.setAttribute('playsinline', 'true');
-        v.setAttribute('webkit-playsinline', 'true');
-        void v.play().catch(() => {});
-      }
       const t = window.setTimeout(() => closeRef.current?.focus(), 320);
       return () => window.clearTimeout(t);
     }
-    const v = videoRef.current;
-    if (v) {
-      v.pause();
-      v.currentTime = 0;
-    }
-    window.dispatchEvent(new CustomEvent('resume-bg-music'));
   }, [open]);
-
-  const hasVideo = Boolean(surprise.videoSrc) && !failed;
 
   return (
     <AnimatePresence>
@@ -58,15 +37,15 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
           aria-label={surprise.videoTitle}
         >
           <motion.div
-            className="relative w-full max-w-2xl"
+            className="relative w-full max-w-2xl max-h-[85vh] flex flex-col"
             initial={{ opacity: 0, scale: 0.92, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.55, ease: EASE }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="overflow-hidden rounded-3xl glass-strong p-4 shadow-glass sm:p-6">
-              <div className="mb-4 flex items-center justify-between gap-4 px-1">
+            <div className="overflow-hidden rounded-3xl glass-strong p-6 shadow-glass sm:p-8 flex flex-col max-h-[85vh]">
+              <div className="mb-4 flex items-center justify-between gap-4 px-1 shrink-0 border-b border-blush-200/10 pb-4">
                 <h3 className="font-display text-lg font-light text-gradient-gold sm:text-xl">
                   {surprise.videoTitle}
                 </h3>
@@ -74,7 +53,7 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
                   ref={closeRef}
                   type="button"
                   onClick={onClose}
-                  aria-label="Close video"
+                  aria-label="Close message"
                   className="grid h-10 w-10 shrink-0 place-items-center rounded-full glass text-blush-100"
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.92 }}
@@ -85,34 +64,16 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
                 </motion.button>
               </div>
 
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-plum-900/80">
-                {hasVideo ? (
-                  // eslint-disable-next-line jsx-a11y/media-has-caption
-                  <video
-                    ref={videoRef}
-                    src={surprise.videoSrc as string}
-                    poster={surprise.videoPoster ?? undefined}
-                    controls
-                    autoPlay
-                    playsInline
-                    onError={() => setFailed(true)}
-                    className="h-full w-full object-contain"
-                  />
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-                    <motion.span
-                      className="text-4xl"
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                      aria-hidden="true"
-                    >
-                      💌
-                    </motion.span>
-                    <p className="max-w-sm font-script text-xl leading-relaxed text-blush-100/85">
-                      {surprise.videoFallback}
-                    </p>
-                  </div>
-                )}
+              {/* Message scroll container */}
+              <div className="overflow-y-auto space-y-4 pr-2 text-left font-body text-[15px] leading-relaxed text-blush-50/90 sm:text-[16.5px] scrollbar-thin scrollbar-thumb-blush-200/20">
+                {surprise.birthdayMessage?.map((p, i) => (
+                  <p key={i} className="leading-[1.85]">
+                    {p}
+                  </p>
+                ))}
+                <div className="pt-6 pb-2 font-script text-2xl text-gradient-romance text-right sm:text-3xl">
+                  {surprise.signOff}
+                </div>
               </div>
             </div>
           </motion.div>
@@ -121,3 +82,4 @@ export function VideoModal({ open, onClose }: { open: boolean; onClose: () => vo
     </AnimatePresence>
   );
 }
+
