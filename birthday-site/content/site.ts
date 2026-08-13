@@ -211,10 +211,10 @@ export const chapter4 = {
   gallery: [
     { src: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4', alt: 'Special video memory 1' },
     { src: '/video/WhatsApp Video 2026-08-12 at 9.01.00 PM.mp4', alt: 'Special video memory 2' },
+    { src: '/video/WhatsApp Video 2026-08-13 at 4.42.27 PM.mp4', alt: 'Special video memory 3' },
     { src: '/photos/pic2.jpeg', alt: 'Artist Night photo 1' },
     { src: '/photos/WhatsApp Image 2026-08-02 at 9.56.42 AM.jpeg', alt: 'Artist Night photo 2' },
     { src: '/photos/WhatsApp Image 2026-08-02 at 10.03.49 AM.jpeg', alt: 'Artist Night photo 3' },
-    { src: null, alt: 'Artist Night photo 4' },
   ] as Photo[],
 };
 
