@@ -123,8 +123,8 @@ export const chapter1 = {
   closing:
     'I don’t know if you realized it then, but from that moment I already saw something special in you.',
   photos: [
-    { src: '/photos/pic2.jpeg', alt: 'A photo of us' },
-    { src: '/photos/WhatsApp Image 2026-08-02 at 9.56.42 AM.jpeg', alt: 'Another photo of us' },
+    { src: '/photos/new2.jpg', alt: 'A photo of us' },
+    { src: '/photos/new1.JPG', alt: 'Another photo of us' },
   ] as Photo[],
 };
 
@@ -146,7 +146,7 @@ export const chapter2 = {
     'Waiting wasn’t easy, but you were worth waiting for.',
     'Looking back now, I’m so thankful that you gave us a chance to build something beautiful together.',
   ],
-  photos: [{ src: '/photos/WhatsApp Image 2026-08-02 at 10.03.49 AM.jpeg', alt: 'A photo of us' }] as Photo[],
+  photos: [{ src: '/photos/new2.jpg', alt: 'A photo of us' }] as Photo[],
 };
 
 /* -------------------------------------------------------------------------- */
@@ -212,11 +212,10 @@ export const chapter4 = {
     { src: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4', alt: 'Special video memory 1' },
     { src: '/video/WhatsApp Video 2026-08-12 at 9.01.00 PM.mp4', alt: 'Special video memory 2' },
     { src: '/video/WhatsApp Video 2026-08-13 at 4.42.27 PM.mp4', alt: 'Special video memory 3' },
-    { src: '/photos/pic2.jpeg', alt: 'Artist Night photo 1' },
-    { src: '/photos/WhatsApp Image 2026-08-02 at 9.56.42 AM.jpeg', alt: 'Artist Night photo 2' },
-    { src: '/photos/WhatsApp Image 2026-08-02 at 10.03.49 AM.jpeg', alt: 'Artist Night photo 3' },
+    { src: '/photos/new1.JPG', alt: 'Artist Night photo 2' },
+    { src: '/photos/new2.jpg', alt: 'Artist Night photo 3' },
     // New photos added to public/photos — appended below
-    { src: '/photos/moon-photo.jpg', alt: 'Moon photo' },
+    { src: '/photos/new3.JPG', alt: 'Moon photo' },
     { src: '/photos/WhatsApp Image 2026-08-13 at 9.18.36 PM.jpeg', alt: 'New photo 1' },
     { src: '/photos/WhatsApp Image 2026-08-13 at 9.18.37 PM.jpeg', alt: 'New photo 2' },
     { src: '/photos/WhatsApp Image 2026-08-13 at 9.18.37 PM (1).jpeg', alt: 'New photo 3' },
@@ -238,7 +237,6 @@ export const chapter4 = {
     // Videos placed in photos folder
     { src: '/photos/WhatsApp Video 2026-08-13 at 9.18.35 PM.mp4', alt: 'Short clip 1' },
     { src: '/photos/WhatsApp Video 2026-08-13 at 9.18.43 PM.mp4', alt: 'Short clip 2' },
-    { src: '/photos/WhatsApp Video 2026-08-13 at 9.18.47 PM.mp4', alt: 'Short clip 3' },
   ] as Photo[],
 };
 
@@ -335,6 +333,14 @@ export const musicChapter = {
       provider: 'local',
       id: null,
       src: '/music/Ariana Grande, John Legend - Beauty and the Beast (From Beauty and the Beast - Official Video).mp3',
+    },
+    {
+      title: 'Heaven Baby',
+      artist: 'Ayra Starr ft. ZAYN',
+      note: 'A little piece of heaven, just like you.',
+      provider: 'local',
+      id: null,
+      src: '/music/Ayra Starr - Heaven Baby ft. ZAYN [2ZTcvsdMR1c].mp3',
     },
     {
       title: 'Until I Found You',
