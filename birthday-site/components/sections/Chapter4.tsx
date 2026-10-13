@@ -29,23 +29,32 @@ export function Chapter4() {
       {/* ---------- gallery ---------- */}
       <div className="mt-16 sm:mt-20">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
-          {c.gallery.map((photo, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 38, scale: 0.94, filter: 'blur(8px)' }}
-              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.85, ease: EASE, delay: (i % 3) * 0.1 }}
-            >
-              <PhotoFrame
-                photo={photo}
-                aspect="aspect-square"
-                tilt={i % 3 === 0 ? -1.8 : i % 3 === 1 ? 0 : 1.8}
-                sizes="(max-width: 640px) 44vw, (max-width: 1024px) 30vw, 300px"
-                onClick={() => setLightbox(i)}
-              />
-            </motion.div>
-          ))}
+          {c.gallery.map((photo, i) => {
+            const isFeatured = Boolean(photo.featured);
+
+            return (
+              <motion.div
+                key={i}
+                className={isFeatured ? 'sm:col-span-2' : ''}
+                initial={{ opacity: 0, y: 38, scale: 0.94, filter: 'blur(8px)' }}
+                whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.85, ease: EASE, delay: (i % 3) * 0.1 }}
+              >
+                <PhotoFrame
+                  photo={photo}
+                  aspect={isFeatured ? 'aspect-[16/9]' : 'aspect-square'}
+                  tilt={i % 3 === 0 ? -1.8 : i % 3 === 1 ? 0 : 1.8}
+                  sizes={
+                    isFeatured
+                      ? '(max-width: 640px) 92vw, (max-width: 1024px) 60vw, 620px'
+                      : '(max-width: 640px) 44vw, (max-width: 1024px) 30vw, 300px'
+                  }
+                  onClick={() => setLightbox(i)}
+                />
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Note: no setup instructions are ever shown on screen — empty photo

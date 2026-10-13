@@ -17,6 +17,8 @@ export type Photo = {
   src: string | null;
   alt: string;
   caption?: string;
+  /** Set to true to make this media tile span two columns in the gallery grid. */
+  featured?: boolean;
   /** Explicitly set to true if source is a video file (auto-detected for .mp4, .webm, .mov) */
   isVideo?: boolean;
 };
@@ -209,7 +211,10 @@ export const chapter4 = {
   ],
   /** Add as many as you like — the grid adapts automatically */
   gallery: [
-    { src: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4', alt: 'Special video memory 1' },
+    {
+      src: '/video/WhatsApp Video 2026-08-02 at 9.56.46 AM.mp4',
+      alt: 'Special video memory 1',
+    },
     { src: '/video/WhatsApp Video 2026-08-12 at 9.01.00 PM.mp4', alt: 'Special video memory 2' },
     { src: '/video/WhatsApp Video 2026-08-13 at 4.42.27 PM.mp4', alt: 'Special video memory 3' },
     { src: '/photos/new1.JPG', alt: 'Artist Night photo 2' },
@@ -256,7 +261,7 @@ export const chapter5 = {
     'You make ordinary days feel extraordinary.',
   ],
   finale: 'I love you very much.',
-  photos: [{ src: '/photos/pic2.jpeg', alt: 'An everyday photo of us' }] as Photo[],
+  photos: [{ src: '/video/abc.MP4', alt: 'A special video memory' }] as Photo[],
 };
 
 /* -------------------------------------------------------------------------- */
