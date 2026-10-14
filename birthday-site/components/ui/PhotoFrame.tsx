@@ -16,6 +16,8 @@ type Props = {
   /** Slight rotation for a scattered polaroid feel. */
   tilt?: number;
   sizes?: string;
+  /** Show native controls so the video can be played with audio in the frame. */
+  videoControls?: boolean;
   onClick?: () => void;
 };
 
@@ -30,6 +32,7 @@ export function PhotoFrame({
   priority = false,
   tilt = 0,
   sizes = '(max-width: 640px) 88vw, (max-width: 1024px) 45vw, 380px',
+  videoControls = false,
   onClick,
 }: Props) {
   const [errored, setErrored] = useState(false);
@@ -64,7 +67,11 @@ export function PhotoFrame({
         <div className={cn('relative overflow-hidden rounded-xl bg-plum-800/60', aspect)}>
           {hasMedia ? (
             isVideo ? (
-              <InlineVideo src={photo.src as string} onError={() => setErrored(true)} />
+              <InlineVideo
+                src={photo.src as string}
+                controls={videoControls}
+                onError={() => setErrored(true)}
+              />
             ) : (
               <Image
                 src={photo.src as string}
@@ -80,7 +87,7 @@ export function PhotoFrame({
             <PhotoPlaceholder alt={photo.alt} />
           )}
 
-          {isVideo && hasMedia && (
+          {isVideo && hasMedia && !videoControls && (
             <span className="absolute right-2.5 top-2.5 z-10 grid h-8 w-8 place-items-center rounded-full bg-plum-950/70 text-white shadow-md backdrop-blur-md transition-transform group-hover:scale-110">
               <svg viewBox="0 0 24 24" className="ml-0.5 h-4 w-4 fill-current">
                 <path d="M8 5v14l11-7z" />
@@ -108,23 +115,33 @@ export function PhotoFrame({
  * Configures DOM attributes for iOS Safari (playsinline, webkit-playsinline, defaultMuted)
  * and uses IntersectionObserver to pause video playback when scrolled off-screen.
  */
-function InlineVideo({ src, onError }: { src: string; onError: () => void }) {
+function InlineVideo({
+  src,
+  controls,
+  onError,
+}: {
+  src: string;
+  controls: boolean;
+  onError: () => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = true;
-    video.defaultMuted = true;
+    if (!controls) {
+      video.muted = true;
+      video.defaultMuted = true;
+    }
     video.setAttribute('playsinline', 'true');
     video.setAttribute('webkit-playsinline', 'true');
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !controls) {
           void video.play().catch(() => {});
-        } else {
+        } else if (!entry.isIntersecting) {
           video.pause();
         }
       },
@@ -136,16 +153,17 @@ function InlineVideo({ src, onError }: { src: string; onError: () => void }) {
       io.disconnect();
       video.pause();
     };
-  }, [src]);
+  }, [src, controls]);
 
   return (
     // eslint-disable-next-line jsx-a11y/media-has-caption
     <video
       ref={videoRef}
       src={src}
-      autoPlay
-      loop
-      muted
+      autoPlay={!controls}
+      loop={!controls}
+      muted={!controls}
+      controls={controls}
       playsInline
       preload="metadata"
       onError={onError}

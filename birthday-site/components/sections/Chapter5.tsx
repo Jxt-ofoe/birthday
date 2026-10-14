@@ -1,19 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { chapter5 as c } from '@/content/site';
 import { Section } from '@/components/ui/Section';
 import { ChapterHeading } from '@/components/ui/ChapterHeading';
 import { StoryText } from '@/components/ui/StoryText';
 import { PhotoFrame } from '@/components/ui/PhotoFrame';
 import { Reveal } from '@/components/ui/Reveal';
-import { Lightbox } from '@/components/ui/Lightbox';
 import { EASE } from '@/lib/motion';
 
 export function Chapter5() {
-  const [lightbox, setLightbox] = useState<number | null>(null);
-
   return (
     <Section id="chapter-5" glow="blush" label="Chapter Five: My Favorite Day">
       <ChapterHeading number={c.number} title={c.title} subtitle={c.subtitle} />
@@ -49,18 +45,11 @@ export function Chapter5() {
               photo={photo}
               aspect="aspect-[3/2]"
               tilt={-1.4}
-              onClick={() => setLightbox(i)}
+              videoControls
             />
           </Reveal>
         ))}
       </div>
-
-      <Lightbox
-        photos={c.photos}
-        index={lightbox}
-        onClose={() => setLightbox(null)}
-        onNavigate={setLightbox}
-      />
     </Section>
   );
 }
